@@ -15,7 +15,8 @@
                             dark: '#111827', // Dark slate
                             red: '#DC2626',  // Varsity red
                             gray: '#374151',
-                            light: '#F3F4F6'
+                            light: '#F3F4F6',
+                            gold: '#F59E0B'
                         }
                     },
                     fontFamily: {
@@ -29,7 +30,8 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .hero-bg {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1522163182402-834f871fd851?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            /* Fallback image if user images aren't loaded yet. Replace URL with your local assets/IMG_5980.jpg */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('./assets/img0.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -37,32 +39,50 @@
         .climbing-hold {
             clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
         }
+        /* Hide scrollbar for clean horizontal scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .page-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .page-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased">
+<body class="bg-gray-50 text-gray-800 antialiased flex flex-col min-h-screen">
 
     <!-- Navigation -->
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-ubs-dark/90 backdrop-blur-md border-b border-gray-800">
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-ubs-dark/95 backdrop-blur-md border-b border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
                 <!-- Logo Area -->
-                <div class="flex-shrink-0 flex items-center">
-                    <a href="#" class="text-white font-black text-2xl tracking-tighter flex items-center gap-2">
-                        <span class="bg-ubs-red text-white w-10 h-10 flex items-center justify-center rounded-lg climbing-hold">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="navigateTo('home')">
+                    <div class="text-white font-black text-2xl tracking-tighter flex items-center gap-2">
+                        <span class="bg-ubs-red text-white w-10 h-10 flex items-center justify-center rounded-lg climbing-hold hover:rotate-12 transition duration-300">
                             <i class="fas fa-mountain"></i>
                         </span>
                         UBS<span class="text-ubs-red">CANADA</span>
-                    </a>
+                    </div>
                 </div>
                 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#about" class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition">About</a>
-                    <a href="#events" class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition">Events</a>
-                    <a href="#history" class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition">History</a>
-                    <a href="#host" class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition">Host a Comp</a>
-                    <a href="#gallery" class="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition">Gallery</a>
-                    <a href="#contact" class="bg-ubs-red text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-red-700 transition shadow-lg transform hover:-translate-y-0.5">Contact Us</a>
+                    <button onclick="navigateTo('home')" class="nav-link text-white hover:text-ubs-red px-3 py-2 rounded-md text-sm font-medium transition">Home</button>
+                    <button onclick="scrollToSection('events')" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">Events</button>
+                    <button onclick="navigateTo('history')" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">History</button>
+                    <button onclick="navigateTo('results')" class="nav-link text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">Results</button>
+                    <button onclick="scrollToSection('contact')" class="bg-ubs-red text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-red-700 transition shadow-lg transform hover:-translate-y-0.5">Contact Us</button>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -77,175 +97,365 @@
         <!-- Mobile Menu Panel -->
         <div id="mobile-menu" class="hidden md:hidden bg-gray-900 border-t border-gray-800 absolute w-full">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#about" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
-                <a href="#events" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Events</a>
-                <a href="#history" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">History</a>
-                <a href="#host" class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Host a Comp</a>
-                <a href="#contact" class="text-ubs-red font-bold block px-3 py-2 rounded-md text-base">Contact Us</a>
+                <button onclick="navigateTo('home')" class="block w-full text-left text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">Home</button>
+                <button onclick="navigateTo('history')" class="block w-full text-left text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">History</button>
+                <button onclick="navigateTo('results')" class="block w-full text-left text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">Results Archive</button>
+                <button onclick="scrollToSection('contact')" class="block w-full text-left text-ubs-red font-bold px-3 py-2 rounded-md text-base">Contact Us</button>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative h-screen flex items-center justify-center hero-bg text-white px-4">
-        <div class="relative z-10 text-center max-w-4xl mx-auto">
-            <span class="text-ubs-red font-bold tracking-widest uppercase text-sm mb-4 block animate-pulse">Est. 2016</span>
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight">
-                CLIMBING FOR <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">STUDENTS</span>
-            </h1>
-            <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto font-light">
-                The official University Bouldering Series of Canada. Connecting colleges and universities through the ultimate climbing experience.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#events" class="bg-ubs-red text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-red-700 transition shadow-xl flex items-center justify-center gap-2">
-                    Find an Event <i class="fas fa-arrow-right"></i>
-                </a>
-                <a href="#host" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-gray-900 transition flex items-center justify-center">
-                    Host a Comp
-                </a>
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow pt-20">
+
+        <!-- ================= HOME PAGE ================= -->
+        <div id="home" class="page-section active">
+            
+            <!-- Hero Section -->
+            <section class="relative h-[85vh] flex items-center justify-center hero-bg text-white px-4">
+                <div class="relative z-10 text-center max-w-4xl mx-auto">
+                    <span class="bg-ubs-red/90 px-3 py-1 rounded text-white font-bold tracking-widest uppercase text-xs mb-6 inline-block shadow-lg">Est. 2016</span>
+                    <h1 class="text-5xl md:text-8xl font-black mb-6 leading-tight drop-shadow-lg">
+                        CLIMBING FOR <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">STUDENTS</span>
+                    </h1>
+                    <p class="text-lg md:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-md">
+                        The official University Bouldering Series of Canada. Uniting campuses through competition.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="scrollToSection('events')" class="bg-ubs-red text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-red-700 transition shadow-xl flex items-center justify-center gap-2 transform hover:scale-105 duration-200">
+                            Find an Event <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button onclick="navigateTo('results')" class="bg-transparent border-2 border-white/30 backdrop-blur-sm text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-gray-900 transition flex items-center justify-center">
+                            View Standings
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Leaderboard Teaser -->
+            <section class="py-12 bg-gray-900 border-b border-gray-800">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col md:flex-row items-center justify-between mb-8">
+                        <div>
+                            <h2 class="text-2xl font-bold text-white"><i class="fas fa-crown text-ubs-gold mr-2"></i>Current Season Leaders</h2>
+                            <p class="text-gray-400 text-sm">2024-2025 Series Standings</p>
+                        </div>
+                        <button onclick="navigateTo('results')" class="text-ubs-red text-sm font-bold hover:text-white mt-4 md:mt-0">View Full Table <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <!-- Mock Leaderboard Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-gray-800 rounded-lg p-4 border border-gray-700 flex items-center gap-4 relative overflow-hidden">
+                            <div class="absolute right-0 top-0 text-6xl text-gray-700 font-black opacity-20 -mr-4 -mt-2">1</div>
+                            <div class="w-12 h-12 rounded-full bg-ubs-gold flex items-center justify-center text-gray-900 font-bold text-xl shadow-lg">1</div>
+                            <div>
+                                <h3 class="text-white font-bold text-lg">McMaster U</h3>
+                                <p class="text-ubs-gold font-mono">2,450 pts</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 rounded-lg p-4 border border-gray-700 flex items-center gap-4 relative overflow-hidden">
+                            <div class="absolute right-0 top-0 text-6xl text-gray-700 font-black opacity-20 -mr-4 -mt-2">2</div>
+                            <div class="w-12 h-12 rounded-full bg-gray-400 flex items-center justify-center text-gray-900 font-bold text-xl shadow-lg">2</div>
+                            <div>
+                                <h3 class="text-white font-bold text-lg">U of Toronto</h3>
+                                <p class="text-gray-300 font-mono">2,100 pts</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 rounded-lg p-4 border border-gray-700 flex items-center gap-4 relative overflow-hidden">
+                            <div class="absolute right-0 top-0 text-6xl text-gray-700 font-black opacity-20 -mr-4 -mt-2">3</div>
+                            <div class="w-12 h-12 rounded-full bg-orange-700 flex items-center justify-center text-white font-bold text-xl shadow-lg">3</div>
+                            <div>
+                                <h3 class="text-white font-bold text-lg">Queen's U</h3>
+                                <p class="text-orange-400 font-mono">1,980 pts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Upcoming Events -->
+            <section id="events" class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Upcoming Events</h2>
+                        <div class="w-20 h-1 bg-ubs-red mx-auto rounded-full"></div>
+                    </div>
+
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <!-- Event Card 1 -->
+                        <div class="bg-white rounded-2xl p-6 shadow-xl border border-gray-100 flex flex-col sm:flex-row gap-6 hover:border-ubs-red transition group">
+                            <div class="bg-ubs-dark text-white rounded-xl p-4 flex flex-col items-center justify-center min-w-[120px]">
+                                <span class="text-sm font-bold uppercase text-gray-400">Nov</span>
+                                <span class="text-4xl font-black">22</span>
+                                <span class="text-xs text-gray-400">2024</span>
+                            </div>
+                            <div class="flex-1">
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-bold mb-2 inline-block">Registration Open</span>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-ubs-red transition">UBS Toprock</h3>
+                                <div class="space-y-2 text-gray-600 mb-4">
+                                    <div class="flex items-center gap-2"><i class="fas fa-map-pin w-5 text-center text-ubs-red"></i> Toprock Climbing, Brampton</div>
+                                    <div class="flex items-center gap-2"><i class="fas fa-clock w-5 text-center text-ubs-red"></i> 9:00 AM - 5:00 PM</div>
+                                </div>
+                                <div class="flex gap-3">
+                                    <button class="flex-1 bg-ubs-dark text-white py-2 rounded-lg font-bold hover:bg-gray-800 transition">Register</button>
+                                    <button class="px-4 border border-gray-300 rounded-lg hover:bg-gray-50"><i class="fas fa-share-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Event Card 2 -->
+                        <div class="bg-white rounded-2xl p-6 shadow-xl border border-gray-100 flex flex-col sm:flex-row gap-6 hover:border-ubs-red transition group">
+                            <div class="bg-gray-100 text-gray-400 rounded-xl p-4 flex flex-col items-center justify-center min-w-[120px]">
+                                <span class="text-sm font-bold uppercase">Jan</span>
+                                <span class="text-4xl font-black text-gray-500">25</span>
+                                <span class="text-xs">2025</span>
+                            </div>
+                            <div class="flex-1">
+                                <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-bold mb-2 inline-block">Coming Soon</span>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-ubs-red transition">Winter Classic</h3>
+                                <div class="space-y-2 text-gray-600 mb-4">
+                                    <div class="flex items-center gap-2"><i class="fas fa-map-pin w-5 text-center text-ubs-red"></i> Boulderz, Etobicoke</div>
+                                    <div class="flex items-center gap-2"><i class="fas fa-info-circle w-5 text-center text-ubs-red"></i> Details TBA</div>
+                                </div>
+                                <div class="flex gap-3">
+                                    <button disabled class="flex-1 bg-gray-200 text-gray-400 py-2 rounded-lg font-bold cursor-not-allowed">Opens Dec 1</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gallery Grid -->
+            <section id="gallery" class="py-20 bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-end mb-12">
+                        <div>
+                            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Gallery</h2>
+                            <p class="text-gray-500 mt-2">The energy of university climbing.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 h-96 md:h-[500px]">
+                        <!-- Main large image (Left) -->
+                        <div class="col-span-2 row-span-2 rounded-2xl overflow-hidden relative group">
+                            <img src="./assets/img1.jpg" 
+                                 alt="Climber on black holds" 
+                                 class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                                <span class="text-white font-bold text-lg"><i class="fas fa-camera mr-2"></i>Qualifier Round</span>
+                            </div>
+                        </div>
+                        <!-- Top Right -->
+                        <div class="col-span-1 row-span-1 rounded-2xl overflow-hidden relative group">
+                            <img src="./assets/img2.jpg" 
+                                 alt="B&W Focus" 
+                                 class="w-full h-full object-cover transition duration-700 group-hover:scale-110 grayscale hover:grayscale-0">
+                        </div>
+                        <!-- Top Far Right -->
+                        <div class="col-span-1 row-span-1 rounded-2xl overflow-hidden relative group">
+                            <img src="./assets/img4.JPG" 
+                                 alt="MCC climber" 
+                                 class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                        </div>
+                        <!-- Bottom Wide Strip -->
+                        <div class="col-span-2 row-span-1 rounded-2xl overflow-hidden relative group">
+                            <img src="./assets/img3.jpg"" 
+                                 alt="Action shot on volume" 
+                                 class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ================= HISTORY PAGE ================= -->
+        <div id="history" class="page-section">
+            <div class="bg-ubs-dark text-white py-24 px-4">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-4xl md:text-6xl font-black mb-6">Our History</h1>
+                    <p class="text-xl text-gray-400">Growing the collegiate climbing scene since 2016.</p>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto px-4 py-16">
+                <!-- Timeline Item 1 -->
+                <div class="flex gap-6 mb-12">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 bg-ubs-red rounded-full flex items-center justify-center text-white font-bold z-10">2016</div>
+                        <div class="h-full w-0.5 bg-gray-200 -mt-2"></div>
+                    </div>
+                    <div class="pb-12">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">The Beginning</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            The University Bouldering Series was founded to fill a gap in the Canadian climbing landscape. 
+                            What started as a single competition between two local universities has grown into a multi-provincial series.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 2 -->
+                <div class="flex gap-6 mb-12">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-white font-bold z-10">2019</div>
+                        <div class="h-full w-0.5 bg-gray-200 -mt-2"></div>
+                    </div>
+                    <div class="pb-12">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Expansion</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            By 2019, the series expanded to include 5 distinct events across Ontario and Quebec, 
+                            hosting over 400 unique student athletes.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 3 -->
+                <div class="flex gap-6">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 bg-ubs-red rounded-full flex items-center justify-center text-white font-bold z-10">Today</div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Varsity Aspirations</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            We continue to push for the recognition of climbing as a varsity sport, providing professional-grade 
+                            competitions and community building for the next generation of climbers.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Call to action for history page -->
+             <div class="bg-gray-100 py-16 text-center px-4">
+                <h2 class="text-2xl font-bold mb-4">Want to be part of history?</h2>
+                <a href="mailto:contact@universityboulderingseries.ca" class="inline-block bg-ubs-dark text-white px-8 py-3 rounded-lg font-bold hover:bg-gray-800">Contact Us</a>
             </div>
         </div>
-        
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-gray-400">
-            <i class="fas fa-chevron-down text-2xl"></i>
-        </div>
-    </section>
 
-    <!-- Features / Mission -->
-    <section id="about" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Mission</h2>
-                <div class="w-20 h-1 bg-ubs-red mx-auto rounded-full"></div>
-                <p class="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
-                    Colleges and universities are incredible places to learn to climb. We are here to spread climbing in post-secondary education and bring students together.
-                </p>
+        <!-- ================= RESULTS PAGE ================= -->
+        <div id="results" class="page-section">
+            <div class="bg-gray-100 py-20 px-4 border-b border-gray-200">
+                <div class="max-w-7xl mx-auto">
+                    <h1 class="text-4xl font-black text-gray-900 mb-4">Results Archive</h1>
+                    <p class="text-gray-600 max-w-2xl">Access detailed scorecards, spreadsheets, and school rankings from past seasons.</p>
+                </div>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-10">
-                <div class="bg-gray-50 p-8 rounded-2xl hover:shadow-lg transition duration-300 border border-gray-100">
-                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-6">
-                        <i class="fas fa-users"></i>
+            <div class="max-w-7xl mx-auto px-4 py-12">
+                
+                <!-- Filter/Search Bar Mockup -->
+                <div class="flex flex-wrap gap-4 mb-8">
+                    <select class="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-ubs-red">
+                        <option>Season 2024-2025</option>
+                        <option>Season 2023-2024</option>
+                        <option>Season 2022-2023</option>
+                    </select>
+                    <div class="relative flex-grow max-w-md">
+                        <input type="text" placeholder="Search for a school..." class="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-ubs-red">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-3">Community First</h3>
-                    <p class="text-gray-600">Whether it's your first semester or you're a seasoned crusher, UBS strives for an encouraging atmosphere that represents the best of climbing culture.</p>
-                </div>
-                <div class="bg-gray-50 p-8 rounded-2xl hover:shadow-lg transition duration-300 border border-gray-100">
-                    <div class="w-14 h-14 bg-ubs-red/10 text-ubs-red rounded-xl flex items-center justify-center text-2xl mb-6">
-                        <i class="fas fa-trophy"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Varsity Aspirations</h3>
-                    <p class="text-gray-600">Hopefully, if we get enough competitions going across Canada, we can make climbing a recognized varsity sport in the future.</p>
-                </div>
-                <div class="bg-gray-50 p-8 rounded-2xl hover:shadow-lg transition duration-300 border border-gray-100">
-                    <div class="w-14 h-14 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-6">
-                        <i class="fas fa-handshake"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3">Gym Partnerships</h3>
-                    <p class="text-gray-600">We assist gyms in putting on competitions. We have the connections and resources to help local gyms reach students effectively.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Upcoming Events -->
-    <section id="events" class="py-20 bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
-                <div>
-                    <h2 class="text-3xl md:text-4xl font-bold mb-2">Upcoming Events</h2>
-                    <p class="text-gray-400">Join the next competition near you.</p>
-                </div>
-                <a href="#" class="text-ubs-red hover:text-white font-semibold transition mt-4 md:mt-0">View Past Results <i class="fas fa-arrow-right ml-1"></i></a>
-            </div>
-
-            <div class="space-y-6">
-                <!-- Event Card 1 -->
-                <div class="bg-gray-800 rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 hover:bg-gray-750 border border-gray-700 transition hover:border-ubs-red group">
-                    <div class="bg-gray-700 rounded-lg p-4 text-center min-w-[100px]">
-                        <span class="block text-sm text-gray-400 uppercase font-bold">Nov</span>
-                        <span class="block text-3xl font-black text-white">22</span>
-                    </div>
-                    <div class="flex-1 text-center md:text-left">
-                        <h3 class="text-2xl font-bold text-white group-hover:text-ubs-red transition">UBS Toprock Climbing</h3>
-                        <p class="text-gray-400 mt-1"><i class="fas fa-map-marker-alt mr-2"></i>Toprock Climbing Gym, Brampton, ON</p>
-                    </div>
-                    <a href="#" class="w-full md:w-auto bg-white text-gray-900 px-6 py-3 rounded-lg font-bold hover:bg-ubs-red hover:text-white transition text-center">
-                        Register Now
-                    </a>
                 </div>
 
-                <!-- Event Card 2 -->
-                <div class="bg-gray-800 rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 hover:bg-gray-750 border border-gray-700 transition hover:border-ubs-red group">
-                    <div class="bg-gray-700 rounded-lg p-4 text-center min-w-[100px]">
-                        <span class="block text-sm text-gray-400 uppercase font-bold">Winter</span>
-                        <span class="block text-3xl font-black text-white">2025</span>
+                <!-- Live Leaderboard Table -->
+                <div class="bg-white shadow-lg rounded-xl overflow-hidden mb-12 border border-gray-200">
+                    <div class="bg-ubs-dark text-white px-6 py-4 flex justify-between items-center">
+                        <h3 class="font-bold text-lg">Current Season Standings</h3>
+                        <span class="text-xs bg-ubs-red px-2 py-1 rounded text-white">LIVE</span>
                     </div>
-                    <div class="flex-1 text-center md:text-left">
-                        <h3 class="text-2xl font-bold text-white group-hover:text-ubs-red transition">Boulderz Winter Classic</h3>
-                        <p class="text-gray-400 mt-1"><i class="fas fa-map-marker-alt mr-2"></i>Boulderz Climbing Centre, Etobicoke, ON</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-50 border-b border-gray-200 text-gray-500 text-xs uppercase font-semibold">
+                                <tr>
+                                    <th class="px-6 py-4">Rank</th>
+                                    <th class="px-6 py-4">School</th>
+                                    <th class="px-6 py-4">Events Attended</th>
+                                    <th class="px-6 py-4">Total Points</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-sm">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-bold text-gray-900">1</td>
+                                    <td class="px-6 py-4 flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded bg-gray-200 flex items-center justify-center font-bold text-xs">M</div>
+                                        McMaster University
+                                    </td>
+                                    <td class="px-6 py-4">3</td>
+                                    <td class="px-6 py-4 font-bold text-ubs-red">2,450</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-bold text-gray-900">2</td>
+                                    <td class="px-6 py-4 flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded bg-gray-200 flex items-center justify-center font-bold text-xs">T</div>
+                                        University of Toronto
+                                    </td>
+                                    <td class="px-6 py-4">3</td>
+                                    <td class="px-6 py-4 font-bold text-ubs-red">2,100</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-bold text-gray-900">3</td>
+                                    <td class="px-6 py-4 flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded bg-gray-200 flex items-center justify-center font-bold text-xs">Q</div>
+                                        Queen's University
+                                    </td>
+                                    <td class="px-6 py-4">2</td>
+                                    <td class="px-6 py-4 font-bold text-ubs-red">1,980</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <a href="#" class="w-full md:w-auto bg-transparent border border-gray-500 text-white px-6 py-3 rounded-lg font-bold hover:bg-white hover:text-gray-900 transition text-center">
-                        Details Soon
-                    </a>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Looking to Host & History Split -->
-    <section id="host" class="py-0">
-        <div class="flex flex-col md:flex-row">
-            <!-- History Side -->
-            <div id="history" class="md:w-1/2 bg-gray-100 p-12 md:p-20 flex flex-col justify-center">
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">History of the UBS</h2>
-                <p class="text-gray-600 mb-6 leading-relaxed">
-                    Since 2016, we have been building the foundation for student climbing in Canada. From small local meetups to large-scale inter-university competitions, our journey has been driven by passion.
-                </p>
-                <a href="#" class="text-ubs-red font-bold hover:underline">Read the full history <i class="fas fa-arrow-right ml-1"></i></a>
-            </div>
-            <!-- Host Side -->
-            <div class="md:w-1/2 bg-ubs-red p-12 md:p-20 flex flex-col justify-center text-white">
-                <h2 class="text-3xl font-bold mb-6">Gyms Looking to Host?</h2>
-                <p class="text-red-100 mb-8 leading-relaxed">
-                    We help gyms tap into the student market. Running a UBS competition brings energy, new members, and community engagement to your facility. We provide the framework; you provide the walls.
-                </p>
-                <button class="bg-white text-ubs-red px-8 py-4 rounded-lg font-bold w-max hover:bg-gray-100 transition shadow-lg">
-                    Partner With Us
-                </button>
-            </div>
-        </div>
-    </section>
+                <!-- Downloadable Sheets Section -->
+                <h3 class="text-xl font-bold text-gray-900 mb-6 border-l-4 border-ubs-red pl-3">Competition Archives</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- File Card -->
+                    <div class="bg-white border border-gray-200 p-6 rounded-xl hover:shadow-md transition flex flex-col">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center text-2xl">
+                                <i class="fas fa-file-excel"></i>
+                            </div>
+                            <span class="text-xs text-gray-400 font-mono">XLSX</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900">Toprock 2023 Full Results</h4>
+                        <p class="text-sm text-gray-500 mt-1 mb-6">Complete scorecard data for Open and Rec categories.</p>
+                        <button class="mt-auto w-full border border-gray-300 text-gray-700 font-bold py-2 rounded-lg hover:bg-gray-50 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
 
-    <!-- Gallery Grid -->
-    <section id="gallery" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Competition Gallery</h2>
-                <p class="text-gray-500 mt-2">Moments from past sends and crush sessions.</p>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="aspect-square overflow-hidden rounded-xl bg-gray-200 relative group">
-                    <img src="https://images.unsplash.com/photo-1564769662533-4f00a87b4056?auto=format&fit=crop&w=600&q=80" alt="Climber" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold">Toprock 2023</div>
-                </div>
-                <div class="aspect-square overflow-hidden rounded-xl bg-gray-200 relative group">
-                    <img src="https://images.unsplash.com/photo-1601925282470-e131699396f4?auto=format&fit=crop&w=600&q=80" alt="Climber" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold">Finals</div>
-                </div>
-                <div class="aspect-square overflow-hidden rounded-xl bg-gray-200 relative group">
-                    <img src="https://images.unsplash.com/photo-1564767609342-620cb19b2357?auto=format&fit=crop&w=600&q=80" alt="Climber" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold">Community</div>
-                </div>
-                <div class="aspect-square overflow-hidden rounded-xl bg-gray-200 relative group">
-                    <img src="https://images.unsplash.com/photo-1583664054745-089023d65813?auto=format&fit=crop&w=600&q=80" alt="Climber" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold">Podium</div>
+                    <!-- File Card -->
+                    <div class="bg-white border border-gray-200 p-6 rounded-xl hover:shadow-md transition flex flex-col">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-2xl">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <span class="text-xs text-gray-400 font-mono">PDF</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900">2022-2023 Season Summary</h4>
+                        <p class="text-sm text-gray-500 mt-1 mb-6">Official final standings for all participating schools.</p>
+                        <button class="mt-auto w-full border border-gray-300 text-gray-700 font-bold py-2 rounded-lg hover:bg-gray-50 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+
+                    <!-- File Card -->
+                    <div class="bg-white border border-gray-200 p-6 rounded-xl hover:shadow-md transition flex flex-col">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center text-2xl">
+                                <i class="fas fa-file-excel"></i>
+                            </div>
+                            <span class="text-xs text-gray-400 font-mono">XLSX</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900">Hub 2022 Results</h4>
+                        <p class="text-sm text-gray-500 mt-1 mb-6">Raw data from the Hub Climbing qualifier.</p>
+                        <button class="mt-auto w-full border border-gray-300 text-gray-700 font-bold py-2 rounded-lg hover:bg-gray-50 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+
+    </main>
 
     <!-- Footer / Contact -->
     <footer id="contact" class="bg-gray-900 text-gray-400 border-t border-gray-800">
@@ -289,7 +499,41 @@
     </footer>
 
     <script>
-        // Mobile Menu Toggle
+        // === SPA NAVIGATION LOGIC ===
+        function navigateTo(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected page
+            const activePage = document.getElementById(pageId);
+            if (activePage) {
+                activePage.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function scrollToSection(sectionId) {
+            // Ensure we are on home page first if the section is on home
+            const homeSections = ['events', 'gallery'];
+            if (homeSections.includes(sectionId)) {
+                navigateTo('home');
+                setTimeout(() => {
+                    const el = document.getElementById(sectionId);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            } else {
+                const el = document.getElementById(sectionId);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        // === MOBILE MENU ===
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
 
@@ -297,27 +541,15 @@
             menu.classList.toggle('hidden');
         });
 
-        // Navbar Scroll Effect
+        // === NAVBAR SCROLL EFFECT ===
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
                 navbar.classList.add('shadow-lg');
-                navbar.classList.add('bg-gray-900/95');
+                navbar.classList.add('bg-ubs-dark/95');
             } else {
                 navbar.classList.remove('shadow-lg');
-                navbar.classList.remove('bg-gray-900/95');
             }
-        });
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                menu.classList.add('hidden'); // Close mobile menu on click
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
         });
     </script>
 </body>
